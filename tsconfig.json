@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"sourceMap": true,
+		"listFiles": true,
+		"outDir": "lib",
+		"rootDir": "src",
+		"module": "commonjs",
+		"isolatedModules": false,
+		"moduleResolution": "node",
+		"watch": true
+	},
+	"exclude": [
+		"node_modules",
+		"lib"
+	]
+}
