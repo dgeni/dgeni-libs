@@ -26,7 +26,8 @@ describe("TagCollection", () => {
     });
 
     it("should add a bad tag to the badTags properties", () => {
-      var badTag = { tagDef: { name: 'param'}, errors: [ {} ] };
+      var badTag = new Tag({ name: 'param'}, 'param');
+      badTag.errors.push('some error');
       tags.addTag(badTag);
       expect(tags.badTags[0]).to.equal(badTag);
       expect(tags.tags.size).to.equal(0);
@@ -35,7 +36,7 @@ describe("TagCollection", () => {
 
   describe("removeTag", () => {
     it("should remove the tag from both the tags and the tagsByName", () => {
-      var tag = { tagDef: { name: 'param' } };
+      var tag = new Tag({name: 'param'}, 'param');
       tags.addTag(tag);
       tags.removeTag(tag);
       expect(tags.getTags('param')).to.be.empty;

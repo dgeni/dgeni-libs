@@ -1,11 +1,12 @@
-import {Tag, TagDefinition} from './Tag';
+import {TagDefinition} from './TagDefinition';
+import {Tag} from './Tag';
 
 /**
  * A collection of tags that can be looked up by their tagDefinition.
  */
 export class TagCollection {
-  tags = new Map<String, Array<Tag>>();
-  badTags = [];
+  tags = new Map<String, Tag[]>();
+  badTags : Tag[] = [];
      
 
   /**
@@ -17,8 +18,8 @@ export class TagCollection {
    * Add a new tag to the collection.
    * @param {Tag} tag The tag to add
    */
-  addTag(tag) {
-    if ( !tag.errors && tag.tagDef ) {
+  addTag(tag : Tag) {
+    if ( !tag.errors.length && tag.tagDef ) {
       let tags = this.tags.get(tag.tagDef.name);
       if (!tags) {
         tags = [];
@@ -34,7 +35,7 @@ export class TagCollection {
    * Remove a tag from the collection
    * @param  {Tag} tag The tag to remove
    */
-  removeTag(tag) {
+  removeTag(tag : Tag) {
     var name = tag.tagDef.name;
     var tags = this.tags.get(name) || [];
     tags = tags.filter((t) => t !== tag);
@@ -50,7 +51,7 @@ export class TagCollection {
    * @param  {string} name The name of the tag definition whose tag we should get
    * @return {Tag}
    */
-  getTag(name) {
+  getTag(name : string) : Tag {
     return this.getTags(name)[0];
   }
 
@@ -59,14 +60,14 @@ export class TagCollection {
    * @param  {string} name The name of the tag definition whose tags we should get
    * @return {Array}
    */
-  getTags(name) {
+  getTags(name : string) : Tag[] {
     return this.tags.get(name) || [];
   }
   
   /**
    * Get the tags in the collection that are in error
    */
-  getBadTags() {
+  getBadTags() : Tag[] {
     return this.badTags;
   }
 }

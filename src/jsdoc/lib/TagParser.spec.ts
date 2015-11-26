@@ -4,7 +4,7 @@ let expect = chai.expect;
 import {TagParser} from './TagParser';
 
 describe("TagParser", function() {
-  var tagParser;
+  var tagParser : TagParser;
   var id = { name: 'id' };
   var description = { name: 'description' };
   var param = { name: 'param' };
@@ -22,26 +22,48 @@ describe("TagParser", function() {
                   '@param some param\n@param some other param';
     var tags = tagParser.parse(content, 10);
 
-    expect(tags.getTag('id')).to.deep.equal({ tagName: 'id', description: 'some.id', lineNumber: 11, tagDef: id });
+    expect(tags.getTag('id')).to.deep.equal({ tagName: 'id', description: 'some.id', startingLine: 11, endingLine: 11, tagDef: id, errors: [] });
 
-    //   // Not that the description tag contains what appears to be another tag but it was ignored so
-    //   // is consumed into the description tag!
-    // expect(doc.tags.tags[1]).toEqual(
-    //   jasmine.objectContaining({ tagName: 'description', description: 'Some description\n@other-tag Some other tag', startingLine: 12})
-    // );
-    // expect(doc.tags.tags[2]).toEqual(
-    //   jasmine.objectContaining({ tagName: 'param', description: 'some param', startingLine: 14 })
-    // );
-    // expect(doc.tags.tags[3]).toEqual(
-    //   jasmine.objectContaining({ tagName: 'param', description: 'some other param', startingLine: 15 })
-    // );
+    // Not that the description tag contains what appears to be another tag but it was ignored so
+    // is consumed into the description tag!
+    expect(tags.getTag('description')).to.deep.equal({
+      tagName: 'description',
+      tagDef: description,
+      description: 'Some description\n@other-tag Some other tag',
+      startingLine: 12,
+      endingLine: 13,
+      errors: []
+    });
+    expect(tags.getTags('param')[0]).to.deep.equal({
+      tagName: 'param',
+      tagDef: param,
+      description: 'some param',
+      startingLine: 14,
+      endingLine: 14,
+      errors: []
+    });
+    expect(tags.getTags('param')[1]).to.deep.equal({
+      tagName: 'param',
+      tagDef: param,
+      description: 'some other param',
+      startingLine: 15,
+      endingLine: 16,
+      errors: []
+    });
   });
 
     it("should cope with tags that have no 'description'", function() {
       var content = '@id\n@description some description';
       var tags = tagParser.parse(content, 123);
-      expect(tags.getTag('id')).to.deep.equal({ tagName: 'id', description: '', tagDef: id });
-      expect(tags.getTag('description')).to.deep.equal({ tagName: 'description', description: 'some description', tagDef: description });
+      expect(tags.getTag('id')).to.deep.equal({ tagName: 'id', description: '', tagDef: id, startingLine: 123, endingLine: 123, errors: [] });
+      expect(tags.getTag('description')).to.deep.equal({
+        tagName: 'description',
+        description: 'some description',
+        tagDef: description,
+        startingLine: 124,
+        endingLine: 125,
+        errors: []
+      });
     });
 
     it("should cope with empty content or no known tags", function() {
@@ -67,7 +89,7 @@ describe("TagParser", function() {
         '```\n\n' +
         'more text\n' +
         '@b is a tag';
-      var tags = tagParser.parse(content);
+      var tags = tagParser.parse(content, 123);
       expect(tags.getTag('a').description).to.equal('some text\n\n' +
         '```\n' +
         '  some code\n' +
@@ -93,7 +115,7 @@ describe("TagParser", function() {
         '  @b not a tag\n' +
         '```\n';
 
-      var tags = tagParser.parse(content);
+      var tags = tagParser.parse(content, 123);
 
       expect(tags.getTag('a').description).to.equal('some text\n\n' +
         '```some single line of code @b not a tag```\n\n' +

@@ -1,6 +1,6 @@
-import {Tag, TagDefinition} from './Tag';
+import {Tag} from './Tag';
+import {TagDefinition} from './TagDefinition';
 import {TagCollection} from './TagCollection';
-import {log, createDocMessage} from '../../utils/log';
 
 export class TagParser {
   static END_OF_LINE = /\r?\n/;
@@ -25,12 +25,14 @@ export class TagParser {
   parse(content : string, startingLine : number) {
     let lines = content.split(TagParser.END_OF_LINE);
     let lineNumber = 0;
-    let line, match, tagDef;
+    let line : string;
+    let match : RegExpExecArray;
+    let tagDef : TagDefinition;
     let descriptionLines = [];
     let description = '';
-    let current;                                      // The current that that is being extracted
+    let current : Tag;                                // The current that that is being extracted
     let inCode = false;                               // Are we inside a fenced, back-ticked, code block
-    let tags : TagCollection = new TagCollection();   // Contains all the tags that have been found
+    let tags = new TagCollection();   // Contains all the tags that have been found
 
     // Extract the description block
     do {
@@ -69,6 +71,7 @@ export class TagParser {
       match = TagParser.TAG_MARKER.exec(line);
       tagDef = match && this.tagDefinitions.get(match[1]);
       if ( !inCode && match && (!tagDef || !tagDef.ignore) ) {
+        current.endingLine = startingLine + lineNumber - 1;
         tags.addTag(current);
         current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
       } else {
@@ -78,6 +81,7 @@ export class TagParser {
       lineNumber += 1;
     }
     if ( current ) {
+      current.endingLine = startingLine + lineNumber;
       tags.addTag(current);
     }
 
