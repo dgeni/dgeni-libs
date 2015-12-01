@@ -3,7 +3,7 @@ let expect = chai.expect;
 
 import {TagParser} from './TagParser';
 
-describe("TagParser", function() {
+describe("TagParser", () => {
   var tagParser : TagParser;
   var id = { name: 'id' };
   var description = { name: 'description' };
@@ -16,7 +16,7 @@ describe("TagParser", function() {
   });
 
 
-  it("should only return tags that are not ignored", function() {
+  it("should only return tags that are not ignored", () => {
     var content = 'Some initial content\n@id some.id\n' +
                   '@description Some description\n@other-tag Some other tag\n' +
                   '@param some param\n@param some other param';
@@ -52,7 +52,7 @@ describe("TagParser", function() {
     });
   });
 
-    it("should cope with tags that have no 'description'", function() {
+    it("should cope with tags that have no 'description'", () => {
       var content = '@id\n@description some description';
       var tags = tagParser.parse(content, 123);
       expect(tags.getTag('id')).to.deep.equal({ tagName: 'id', description: '', tagDef: id, startingLine: 123, endingLine: 123, errors: [] });
@@ -66,7 +66,7 @@ describe("TagParser", function() {
       });
     });
 
-    it("should cope with empty content or no known tags", function() {
+    it("should cope with empty content or no known tags", () => {
       expect(function() {
         tagParser.parse('', 123);
       }).not.to.throw;
@@ -77,7 +77,7 @@ describe("TagParser", function() {
     });
 
 
-    it("should ignore @tags inside back-ticked code blocks", function() {
+    it("should ignore @tags inside back-ticked code blocks", () => {
       var a = { name: 'a' };
       var b = { name: 'b' };
       tagParser = new TagParser([a, b]);
@@ -102,7 +102,7 @@ describe("TagParser", function() {
     });
 
 
-    it("should cope with single line back-ticked code blocks", function() {
+    it("should cope with single line back-ticked code blocks", () => {
       var a = { name: 'a' };
       var b = { name: 'b' };
       tagParser = new TagParser([a, b]);

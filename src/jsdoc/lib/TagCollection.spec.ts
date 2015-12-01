@@ -19,14 +19,14 @@ describe("TagCollection", () => {
 
   describe("addTag", () => {
     it("should add a good tag to the tags", () => {
-      var goodTag = new Tag({name:'param'}, 'param');
+      var goodTag = new Tag({name:'param'});
       tags.addTag(goodTag);
       expect(tags.getTag('param')).to.equal(goodTag);
       expect(tags.badTags).to.be.empty;
     });
 
     it("should add a bad tag to the badTags properties", () => {
-      var badTag = new Tag({ name: 'param'}, 'param');
+      var badTag = new Tag({ name: 'param'});
       badTag.errors.push('some error');
       tags.addTag(badTag);
       expect(tags.badTags[0]).to.equal(badTag);
@@ -36,7 +36,7 @@ describe("TagCollection", () => {
 
   describe("removeTag", () => {
     it("should remove the tag from both the tags and the tagsByName", () => {
-      var tag = new Tag({name: 'param'}, 'param');
+      var tag = new Tag({name: 'param'});
       tags.addTag(tag);
       tags.removeTag(tag);
       expect(tags.getTags('param')).to.be.empty;
@@ -64,5 +64,4 @@ describe("TagCollection", () => {
       expect(tags.getTags(tagDef.name)).to.deep.equal([tag1,tag2]);
     });
   });
-
 });

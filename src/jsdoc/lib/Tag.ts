@@ -6,7 +6,7 @@ export class Tag {
   
   constructor(
     public tagDef : TagDefinition,
-    public tagName : string,
+    public tagName = tagDef.name,
     public description? : string,
     public startingLine? : number,    
     public endingLine? : number) {    

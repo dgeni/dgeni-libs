@@ -28,12 +28,9 @@ function createDoc(tags) : any {
   };
 }
 
-
-
-
 describe("TagExtractor", () => {
 
-  it("should log a warning if the doc contains bad tags", function() {
+  it("should log a warning if the doc contains bad tags", () => {
       var badTag = new TypedTag({ name: 'bad1' }, 'bad1', 'bad tag 1', 123, 129);
       badTag.typeExpression = 'string';
       badTag.errors = [
@@ -54,8 +51,8 @@ describe("TagExtractor", () => {
         '    * second bad thing\n\n');
   });
 
-  describe('default tag-def', function() {
-    it("should the extract the description property to a property with the name of the tagDef", function() {
+  describe('default tag-def', () => {
+    it("should the extract the description property to a property with the name of the tagDef", () => {
       var tagDef = { name: 'a' };
       var tagExtractor = new TagExtractor([tagDef]);
 
@@ -67,8 +64,8 @@ describe("TagExtractor", () => {
     });
   });
 
-  describe("tag-defs with docProperty", function() {
-    it("should assign the extracted value to the docProperty", function() {
+  describe("tag-defs with docProperty", () => {
+    it("should assign the extracted value to the docProperty", () => {
       var tagDef = { name: 'a', docProperty: 'b' };
       var tagExtractor = new TagExtractor([tagDef]);
 
@@ -81,8 +78,8 @@ describe("TagExtractor", () => {
     });
   });
 
-  describe("tag-defs with multi", function() {
-    it("should assign the extracted value(s) to an array on the doc", function() {
+  describe("tag-defs with multi", () => {
+    it("should assign the extracted value(s) to an array on the doc", () => {
       var tagDef = { name: 'a', multi: true };
       var tagExtractor = new TagExtractor([tagDef]);
 
@@ -99,20 +96,20 @@ describe("TagExtractor", () => {
     });
   });
 
-  describe("tag-defs with required", function() {
-    it("should throw an error if the tag is missing", function() {
+  describe("tag-defs with required", () => {
+    it("should throw an error if the tag is missing", () => {
       var tagDef = { name: 'a', required: true };
       var tagExtractor = new TagExtractor([tagDef]);
 
       var doc = createDoc([]);
-      expect(function() {
+      expect(() => {
         tagExtractor.extract(doc, doc.tags);
       }).to.throw();
     });
   });
 
-  describe("tag-defs with tagProperty", function() {
-    it("should assign the specified tag property to the document", function() {
+  describe("tag-defs with tagProperty", () => {
+    it("should assign the specified tag property to the document", () => {
 
       var tagDef = { name: 'a', tagProperty: 'b' };
       var tagExtractor = new TagExtractor([tagDef]);
@@ -129,9 +126,9 @@ describe("TagExtractor", () => {
     });
   });
 
-  describe("tag-defs with defaultFn", function() {
+  describe("tag-defs with defaultFn", () => {
 
-    it("should run the defaultFn if the tag is missing", function() {
+    it("should run the defaultFn if the tag is missing", () => {
       var defaultFn = sinon.stub().returns('default value');
       var tagDef = { name: 'a', defaultFn: defaultFn };
       var tagExtractor = new TagExtractor([tagDef]);
@@ -143,9 +140,9 @@ describe("TagExtractor", () => {
       expect(defaultFn).to.have.been.called;
     });
 
-    describe("and mult", function() {
+    describe("and mult", () => {
 
-      it("should run the defaultFn if the tag is missing", function() {
+      it("should run the defaultFn if the tag is missing", () => {
         var defaultFn = sinon.stub().returns(['default value']);
         var tagDef = { name: 'a', defaultFn: defaultFn, multi: true };
 
@@ -162,10 +159,10 @@ describe("TagExtractor", () => {
   });
 
 
-  describe("transforms", function() {
+  describe("transforms", () => {
 
-    describe("(single)", function() {
-      it("should apply the transform to the extracted value", function() {
+    describe("(single)", () => {
+      it("should apply the transform to the extracted value", () => {
         function addA(doc, tag, value) { return value + '*A*'; }
         var tagDef = { name: 'a', transforms: addA };
 
@@ -181,7 +178,7 @@ describe("TagExtractor", () => {
 
       });
 
-      it("should allow changes to tag and doc", function() {
+      it("should allow changes to tag and doc", () => {
         function transform(doc, tag, value) { doc.x = 'x'; tag.b = 'b'; return value; }
         var tagDef = { name: 'a', transforms: transform };
 
@@ -200,8 +197,8 @@ describe("TagExtractor", () => {
     });
 
 
-    describe("(multiple)", function() {
-      it("should apply the transforms to the extracted value", function() {
+    describe("(multiple)", () => {
+      it("should apply the transforms to the extracted value", () => {
         function addA(doc, tag, value) { return value + '*A*'; }
         function addB(doc, tag, value) { return value + '*B*'; }
         var tagDef = { name: 'a', transforms: [ addA, addB ] };
@@ -218,7 +215,7 @@ describe("TagExtractor", () => {
 
       });
 
-      it("should allow changes to tag and doc", function() {
+      it("should allow changes to tag and doc", () => {
         function transform1(doc, tag, value) { doc.x = 'x'; return value; }
         function transform2(doc, tag, value) { tag.b = 'b'; return value; }
         var tagDef = { name: 'a', transforms: [transform1, transform2] };
@@ -238,9 +235,9 @@ describe("TagExtractor", () => {
     });
   });
 
-  describe("default transforms", function() {
+  describe("default transforms", () => {
 
-    it("should apply the default transformations to all tags", function() {
+    it("should apply the default transformations to all tags", () => {
       var tagDef1 = { name: 'a' };
       var tagDef2 = { name: 'b' };
       function addA(doc, tag, value) { return value + '*A*'; }
@@ -258,7 +255,7 @@ describe("TagExtractor", () => {
     });
 
 
-    it("should apply the default transformations after tag specific transforms", function() {
+    it("should apply the default transformations after tag specific transforms", () => {
       function addA(doc, tag, value) { return value + '*A*'; }
       function addB(doc, tag, value) { return value + '*B*'; }
       var tagDef1 = { name: 'a', transforms: addA };

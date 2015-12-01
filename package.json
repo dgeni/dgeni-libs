@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
-  "dependencies": {},
+  "dependencies": {
+    "catharsis": "^0.8.7",
+    "spdx-license-list": "^2.1.0"
+  },
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
